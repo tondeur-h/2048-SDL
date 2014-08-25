@@ -23,7 +23,7 @@ public:
 	virtual ~AppGame();
 
 private:
-	void frameRate();
+	//void frameRate(); //not used
 	int checkTab();
 	void calculateTab(int dir);
 	void drawTab();

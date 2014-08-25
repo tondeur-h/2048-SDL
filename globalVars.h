@@ -8,10 +8,10 @@
 #ifndef GLOBALVARS_H_
 #define GLOBALVARS_H_
 
-//include SDL bib
+//include bibliothéque SDL
 #include <SDL/SDL.h>
-#include <SDL/SDL_image.h>
-#include <SDL/SDL_mixer.h>
+//#include <SDL/SDL_image.h>
+//#include <SDL/SDL_mixer.h>
 #include <SDL/SDL_gfxPrimitives.h>
 #include <SDL/SDL_ttf.h>
 
@@ -21,17 +21,19 @@
 #include <string>
 #include <sstream>
 
-//specifique C
+//specifique C (pour fct
 #include <unistd.h>
 
-
+//Grille du jeu
 extern int tabNum[4][4];
-extern int tabNumTmp[4][4];
 
-extern int FRAME_PER_SECOND;
+//not used
+//extern int FRAME_PER_SECOND;
 
+//booleen pour la sortie de la boucle de jeu...
 extern bool GoOut;
 
+//surface principale et evenements principaux...
 extern SDL_Surface* screen;
 extern SDL_Event event;
 

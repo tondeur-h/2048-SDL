@@ -9,13 +9,13 @@
 
 namespace game {
 
-//const mode video
+//const pour le mode video
 const int SCREENWIDTH=480;
 const int SCREENHEIGHT=640;
-const int SCREENBPP=0;
+const int SCREENBPP=0; //profondeur max dispo
 
 //tick pour le calcul du frame rate
-long int firstTick, lastTick;
+//long int firstTick, lastTick;
 
 //coordonnées de la souris
 int X,Y;
@@ -34,7 +34,7 @@ int stepH=height/nbCase;
 //quelques variables utiles
 int direction;
 long int score;
-int resultCheck;
+int resultCheck;  //valeur de retour du contrôle de la grille de jeu
 int gameOver=false;
 int gameWin=false;
 
@@ -43,8 +43,11 @@ TTF_Font* fontLarge;
 TTF_Font* fontMedium;
 TTF_Font* fontSmall;
 TTF_Font* fontVerySmall;
+
 SDL_Color fgColor;
+
 SDL_Rect rectDst;
+
 SDL_Surface* renderNumber;
 SDL_Surface* renderScore;
 SDL_Surface* renderNewGame;
@@ -53,18 +56,13 @@ SDL_Surface* renderCopyright;
 SDL_Surface* renderGameOver;
 SDL_Surface* renderGameWin;
 
-
+/**************
+ * nouveau a la creation de l'objet.
+ **************/
 AppGame::AppGame() {
 	newGame();
-//	//initialiser les tableaux
-//	for (int x=0;x<4;x++){
-//		for (int y=0;y<4;y++){
-//			tabNum[x][y]=pow(2,double((rand()%11)+1));
-//			//tabNum[x][y]=0;
-//			tabNumTmp[x][y]=0;
-//		}//for
-//	}//for
 }
+
 
 
 
@@ -72,21 +70,22 @@ AppGame::AppGame() {
  * concat current directory with relatif path and file name...
  *****************/
 std::string AppGame::get_file(std::string file){
-std::string retour;
-retour=std::string(get_current_dir_name())+file;
-return retour;
+return std::string(get_current_dir_name())+file;
 }
 
 
-/**
+
+
+/*****************
  * Initialise SDL et le mode video
- */
+ *****************/
 bool AppGame::initSDL(){
 	if (SDL_Init(SDL_INIT_EVERYTHING)==-1){
 		std::cout<<"Erreur init SDL!"<<std::endl;
 		return false;
 	}//if
 
+	//mode fenêtre
 	if ((screen=SDL_SetVideoMode(SCREENWIDTH,SCREENHEIGHT,SCREENBPP,SDL_SWSURFACE))==NULL){
 		std::cout<<"Erreur set Video SDL!"<<std::endl;
 				return false;
@@ -98,6 +97,7 @@ bool AppGame::initSDL(){
 		std::cout<<"Erreur loading font!"<<std::endl;
 			return false;
 	}//if
+
 	fontLarge=TTF_OpenFont(get_file("/gfx/font.fnt").c_str(),58);
 	fontMedium=TTF_OpenFont(get_file("/gfx/font.fnt").c_str(),38);
 	fontSmall=TTF_OpenFont(get_file("/gfx/font.fnt").c_str(),28);
@@ -113,13 +113,13 @@ bool AppGame::initSDL(){
  * calculer le temp d'attente entre chaque Frame
  * impose le frame rate (non utilisé)
  */
-void AppGame::frameRate(){
+/*void AppGame::frameRate(){
 lastTick=SDL_GetTicks();
 long int spent=lastTick-firstTick;
 long int TIME_FRAME=(1000/FRAME_PER_SECOND);
 if (spent>TIME_FRAME) { spent=TIME_FRAME;}
 	SDL_Delay(TIME_FRAME-spent);
-}
+}*/
 
 
 
@@ -128,6 +128,13 @@ if (spent>TIME_FRAME) { spent=TIME_FRAME;}
  * Boucle principale du jeu
  */
 void AppGame::loopGame(){
+
+	//ignorer les evenement du clavier
+	SDL_EventState(SDL_KEYDOWN,SDL_IGNORE);
+	SDL_EventState(SDL_KEYUP,SDL_IGNORE);
+
+	//dessine le plateau une premiere fois
+		drawTab();
 
 	while (!GoOut){
 
@@ -139,17 +146,12 @@ void AppGame::loopGame(){
 						GoOut=true;
 						break;
 
-		case SDL_KEYDOWN:
-						//if (event->key.keysym.sym==SDLK_)
-
-						break;
-
 		case SDL_MOUSEBUTTONDOWN:
 						if (event.button.button==SDL_BUTTON_LEFT){
 							X=event.button.x;
 							Y=event.button.y;
 							direction=mouseConvertPos(X,Y);
-							if (direction==5) {newGame();direction=0;}
+							if (direction==5) {newGame();drawTab();direction=0;}
 							if (direction==6) {GoOut=true;direction=0;}
 							if (direction>=1 && direction<=4)
 							{
@@ -158,7 +160,6 @@ void AppGame::loopGame(){
 																direction=0;
 																if (resultCheck==0){gameOver=true;}
 																if (resultCheck==3){gameWin=true;}
-																//std::cout<<resultCheck<<std::endl;
 							}
 
 						}
@@ -166,7 +167,7 @@ void AppGame::loopGame(){
 
 		} //switch
 
-			//dessine le jeu
+			//dessine le plateau
 			drawTab();
 
 	} //if
@@ -177,9 +178,9 @@ void AppGame::loopGame(){
 
 
 
-/**
+/*******************
  * Verifier si le tableau n'est pas complet.
- */
+ *******************/
 int AppGame::checkTab(){
 bool compactable=false;
 bool OK2048=false;
@@ -201,7 +202,7 @@ for (int x=0;x<4;x++){
 
 //si nbVide>1
 if (nbVide>1){
-//ajouter un nombre entre 2 et 4
+//ajouter un nombre 2 ou 4 et quitter
 	int nbOK=0;
 	while(nbOK<1){
 		int x=rand()%4;int y=rand()%4;
@@ -211,7 +212,7 @@ return 1;
 }
 else
 {
-	//ajouter un nombre entre 2 et 4
+	//ajouter un nombre 2 ou 4
 		int nbOK=0;
 		while(nbOK<1){
 			int x=rand()%4;int y=rand()%4;
@@ -220,7 +221,7 @@ else
 }
 
 //---------------------------------------------------------------------
-//Tester si compactable doit y avoir 2 valeurs identique contigue
+//Tester si compactable doit y avoir 2 valeurs identiques contigue
 //tester les lignes
 for (int y=0;y<4;y++){
 	for (int x=0;x<3;x++){
@@ -247,7 +248,7 @@ for (int x=0;x<4;x++){
 if (OK2048) return 3;
 
 //---------------------------------------------------------------------
-//fin de jeu, plus aucun coup possible
+//fin de jeu, plus aucun coup possible ;-(
 return 0;
 }
 
@@ -255,10 +256,16 @@ return 0;
 
 
 /**
- * calcule les sommes du tableau apret un deplacement
+ * calcule les sommes du tableau aprés un deplacement
  */
 void AppGame::calculateTab(int dir){
 int z=0;
+/*
+ * 1 vers le haut
+ * 2 vers la droite
+ * 3 vers le bas
+ * 4 vers la gauche
+ */
 
 if (dir==1){
 	//compactages des nombres
@@ -418,24 +425,24 @@ for (int y=0;y<4;y++){
 
 
 
-/**
+/*********************
  * dessine le tableau et les valeurs du tableau
- */
+ *********************/
 void AppGame::drawTab(){
 //vider l'écran
 boxRGBA(screen,0,0,SCREENWIDTH,SCREENHEIGHT,0,0,0,255);
 drawGrid();
 drawTools();
 drawInsideGrid();
-SDL_UpdateRect(screen,0,0,0,0); //redessiner l'écran
+SDL_UpdateRect(screen,0,0,0,0); //rafraichir l'affichage
 }
 
 
 
 
-/**
+/*****************
  * dessine les chiffres dans les cases
- */
+ *****************/
 void AppGame::drawInsideGrid(){
 for (int x=0;x<4;x++){
 	for (int y=0;y<4;y++){
@@ -497,9 +504,9 @@ for (int x=0;x<4;x++){
 
 
 
-/**
+/******************
  * Dessiner la grille seule...
- */
+ ******************/
 void AppGame::drawGrid(){
 //bord de la grille
 boxRGBA(screen,left,top,left+ep,top+height,255,255,255,200);
@@ -518,9 +525,9 @@ for(int x=1;x<=nbCase;x++){
 
 
 
-/**
+/**********************
  * convertir la position de la souris en un evenement sur un element cliquable
- */
+ **********************/
 int AppGame::mouseConvertPos(int x, int y){
 // haut 1
 // droite 2
@@ -550,15 +557,15 @@ if ((x>(left+width+5)) && (x<(left+width+20)) && (y>(top+(height/2)-20)) && (y<(
 	return 2;
 }
 
-//retourne rien
+//retourne rien sinon
 return 0;
 }
 
 
 
-/**
+/********************
  * dessine les elements cliquables et modifables
- */
+ ********************/
 void AppGame::drawTools(){
 	//dessiner les fleches de direction
 filledTrigonRGBA(screen,left+(width/2),top -20,left+(width/2)-20,top-2,left+(width/2)+20,top-2,255,255,255,200);
@@ -588,7 +595,6 @@ boxRGBA(screen,20,20,180,100,200,200,0,200);
 //score
 boxRGBA(screen,200,20,460,70,0,150,0,200);
 //rendu, centrage et affichage du chiffre
-
 //convertir chiffre en chaine de caracteres
 		std::ostringstream ss;
 		ss<< score;
@@ -635,9 +641,9 @@ if (gameWin){
 
 
 
-/**
+/******************
  * creer une nouvelle partie
- */
+ ******************/
 void AppGame::newGame(){
 
 srand(time(NULL));
@@ -649,7 +655,6 @@ score=0;
 		for (int x=0;x<4;x++){
 			for (int y=0;y<4;y++){
 				tabNum[x][y]=0;
-				tabNumTmp[x][y]=0;
 			}//for
 		}//for
 

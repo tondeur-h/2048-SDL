@@ -7,12 +7,12 @@
 
 #include "globalVars.h"
 
+//init des variables globales
+
 int FRAME_PER_SECOND=4;
 int tabNum[4][4];
-int tabNumTmp[4][4];
 
 SDL_Surface* screen=NULL;
 SDL_Event event;
 
 bool GoOut=false;
-
