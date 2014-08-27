@@ -1,39 +1,48 @@
 /*
  * globalVars.h
  *
- *  Created on: Aug 21, 2014
- *      Author: herve
+ *  Created on: 21 Aout 2014
+ *      Author: Tondeur Herve
+ *
+ *  This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 
 #ifndef GLOBALVARS_H_
 #define GLOBALVARS_H_
 
-//include bibliothéque SDL
-#include <SDL/SDL.h>
-//#include <SDL/SDL_image.h>
-//#include <SDL/SDL_mixer.h>
-#include <SDL/SDL_gfxPrimitives.h>
-#include <SDL/SDL_ttf.h>
+//include SDL bib
+#include <SDL.h>
+#include <SDL_gfxPrimitives.h>
+#include <SDL_ttf.h>
 
 
 //standard C++ bib
 #include <iostream>
 #include <string>
 #include <sstream>
+#include <math.h>
+#include <ctime>
+#include <fstream>
 
-//specifique C (pour fct
-#include <unistd.h>
 
-//Grille du jeu
 extern int tabNum[4][4];
 
-//not used
-//extern int FRAME_PER_SECOND;
+extern int FRAME_PER_SECOND;
 
-//booleen pour la sortie de la boucle de jeu...
 extern bool GoOut;
 
-//surface principale et evenements principaux...
 extern SDL_Surface* screen;
 extern SDL_Event event;
 
