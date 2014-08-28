@@ -59,12 +59,9 @@ TTF_Font* fontSmall;
 TTF_Font* fontVerySmall;
 SDL_Color fgColor;
 SDL_Rect rectDst;
+
 SDL_Surface* renderNumber;
-SDL_Surface* renderScore;
-SDL_Surface* renderBestScore;
-SDL_Surface* renderNewGame;
-SDL_Surface* renderQuitGame;
-SDL_Surface* renderCopyright;
+SDL_Surface* renderBtn;
 SDL_Surface* renderGameOver;
 SDL_Surface* renderGameWin;
 
@@ -78,6 +75,9 @@ AppGame::AppGame() {
 }
 
 
+void debug(std::string deb){
+	std::cout<<deb<<std::endl;
+}
 
 
 /**
@@ -527,6 +527,29 @@ for (int x=0;x<4;x++){
 
 
 
+void AppGame::drawBtn(int x1,int y1,int w,int h,std::string txt,TTF_Font* font, int bgr, int bgg, int bgb, int bga, SDL_Color fgC, bool shadow, bool round, bool center){
+
+int rn=5;
+if (round){rn=5;} else {rn=1;}
+
+//ombre
+if (shadow){roundedBoxRGBA(screen,x1,y1,x1+w,y1+h,rn,100,100,100,80);}
+//btn
+roundedBoxRGBA(screen,x1+3,y1+3,x1+w,y1+h,rn,bgr,bgg,bgb,bga);
+	renderBtn=TTF_RenderText_Blended(font,txt.c_str(),fgC);
+    if (center){
+    rectDst.x=((w/2)-(renderBtn->w/2))+x1;
+	rectDst.y=((h/2)-(renderBtn->h/2))+y1;
+    } else
+    {
+    rectDst.x=x1;
+	rectDst.y=y1;
+    }
+	SDL_BlitSurface(renderBtn,NULL,screen,&rectDst);
+	SDL_FreeSurface(renderBtn);
+}
+
+
 
 /**
  * Dessiner la grille seule...
@@ -623,107 +646,36 @@ filledTrigonRGBA(screen,left+(width/2),top+height+20,left+(width/2)-20,top+heigh
 filledTrigonRGBA(screen,left-20,top+(height/2),left-2,top+(height/2)-20,left-2,top+(height/2)+20,255,255,255,200);
 filledTrigonRGBA(screen,left+width+20,top+(height/2),left+width+5,top+(height/2)-20,left+width+5,top+(height/2)+20,255,255,255,200);
 
-//nouveau jeu
-//ombre
-roundedBoxRGBA(screen,18,18,180,60,5,255,255,255,80);
-//btn
-roundedBoxRGBA(screen,20,20,180,60,5,200,200,0,200);
+fgColor.r=255; fgColor.g=255;fgColor.b=255;
 
-fgColor.r=255;fgColor.g=255;fgColor.b=255;
-	rectDst.x=65;
-	rectDst.y=20;
-	renderNewGame=TTF_RenderText_Blended(fontMedium,"NEW",fgColor);
-	SDL_BlitSurface(renderNewGame,NULL,screen,&rectDst);
-	SDL_FreeSurface(renderNewGame);
+//nouveau jeu
+drawBtn(20,20,160,40,"NEW",fontMedium,200,200,0,200,fgColor,true,true,true);
 
 //nouveau challenge
-//ombre
-roundedBoxRGBA(screen,18,70,180,110,5,255,255,255,80);
-//btn
-roundedBoxRGBA(screen,20,68,180,110,5,159,121,238,200);
-
-	rectDst.x=22;
-	rectDst.y=75;
-	renderNewGame=TTF_RenderText_Blended(fontSmall,"Challenge",fgColor);
-	SDL_BlitSurface(renderNewGame,NULL,screen,&rectDst);
-	SDL_FreeSurface(renderNewGame);
-
-
+drawBtn(20,70,160,40,"Challenge",fontSmall,159,121,238,200,fgColor,true,true,true);
 
 	//quitter jeu
-	//ombre
-	roundedBoxRGBA(screen,18,118,180,190,10,250,250,250,80);
-	//btn
-	roundedBoxRGBA(screen,20,120,180,190,10,200,0,0,200);
-
-		rectDst.x=55;
-		rectDst.y=135;
-		renderQuitGame=TTF_RenderText_Blended(fontMedium,"QUIT",fgColor);
-		SDL_BlitSurface(renderQuitGame,NULL,screen,&rectDst);
-		SDL_FreeSurface(renderQuitGame);
-
+drawBtn(20,120,160,70,"QUIT",fontMedium,200,0,0,200,fgColor,true,false,true);
 
     //bouton help
-//ombre
-	roundedBoxRGBA(screen,398,0,460,20,5,250,250,250,80);
-	//btn
-	roundedBoxRGBA(screen,400,2,460,20,5,255,140,0,200);
+drawBtn(400,0,60,20,"Help",fontVerySmall,255,140,0,200,fgColor,true,true,true);
 
-		rectDst.x=415;
-		rectDst.y=3;
-		renderQuitGame=TTF_RenderText_Blended(fontVerySmall,"Help",fgColor);
-		SDL_BlitSurface(renderQuitGame,NULL,screen,&rectDst);
-		SDL_FreeSurface(renderQuitGame);
-
-
-
-//score
-renderScore=TTF_RenderText_Blended(fontSmall,"Score",fgColor);
-	rectDst.x=200;
-	rectDst.y=15;
-	SDL_BlitSurface(renderScore,NULL,screen,&rectDst);
-	SDL_FreeSurface(renderScore);
-
-boxRGBA(screen,200,50,460,95,0,150,0,200);
-//rendu, centrage et affichage du chiffre
-
+//score text
+drawBtn(200,20,100,20,"Score",fontSmall,0,0,0,0,fgColor,false,false,false);
 //convertir chiffre en chaine de caracteres
-		std::ostringstream ss;
-		ss<< score;
-	renderScore=TTF_RenderText_Blended(fontMedium,ss.str().c_str(),fgColor);
-	rectDst.x=210;
-	rectDst.y=52;
-	SDL_BlitSurface(renderScore,NULL,screen,&rectDst);
-	SDL_FreeSurface(renderScore);
-
+    std::ostringstream ss;ss<< score;
+    drawBtn(200,50,260,35,ss.str().c_str(),fontMedium,0,150,0,200,fgColor,false,false,false);
 
 //best score
-	renderBestScore=TTF_RenderText_Blended(fontSmall,"Best Score",fgColor);
-	rectDst.x=200;
-	rectDst.y=98;
-	SDL_BlitSurface(renderBestScore,NULL,screen,&rectDst);
-	SDL_FreeSurface(renderBestScore);
-
-
-boxRGBA(screen,200,130,460,175,0,0,150,200);
-//rendu, centrage et affichage du chiffre
-
+drawBtn(200,100,200,20,"Best Score",fontSmall,0,0,0,0,fgColor,false,false,false);
 //convertir chiffre en chaine de caracteres
-std::ostringstream sbs;
-		sbs<< bestScore;
-	renderBestScore=TTF_RenderText_Blended(fontMedium,sbs.str().c_str(),fgColor);
-	rectDst.x=210;
-	rectDst.y=132;
-	SDL_BlitSurface(renderBestScore,NULL,screen,&rectDst);
-	SDL_FreeSurface(renderBestScore);
+std::ostringstream sbs;sbs<< bestScore;
+drawBtn(200,130,260,35,sbs.str().c_str(),fontMedium,0,0,150,200,fgColor,false,false,false);
 
 
 //copyright
-	rectDst.x=10;
-	rectDst.y=624;
-	renderCopyright=TTF_RenderText_Blended(fontVerySmall,"Tondeur Herve Copyright (c) 2014 licence GPL v3.0",fgColor);
-	SDL_BlitSurface(renderCopyright,NULL,screen,&rectDst);
-	SDL_FreeSurface(renderCopyright);
+drawBtn(10,624,0,0,"Tondeur Herve Copyright (c) 2014 licence GPL v3.0",fontVerySmall,0,0,0,0,fgColor,false,false,false);
+
 
 //dessiner "game over"
 	//gameOver=true;

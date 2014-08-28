@@ -45,6 +45,7 @@ private:
 	void drawGrid();
 	void drawTools();
 	void drawInsideGrid();
+	void drawBtn(int x1,int y1,int w,int h,std::string txt,TTF_Font* font, int bgr, int bgg, int bgb, int bga, SDL_Color fgC, bool shadow, bool round, bool center);
 	int mouseConvertPos(int x,int y);
 	void newGame();
 	void newChallenge();
