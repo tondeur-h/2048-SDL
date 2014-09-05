@@ -1,23 +1,9 @@
 /*
  * globalVars.h
  *
- *  Created on: 21 Aout 2014
- *      Author: Tondeur Herve
- *
- *  This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *  Created on: Aug 21, 2014
+ *      Author: herve
  */
-
 
 #ifndef GLOBALVARS_H_
 #define GLOBALVARS_H_
@@ -26,6 +12,7 @@
 #include <SDL.h>
 #include <SDL_gfxPrimitives.h>
 #include <SDL_ttf.h>
+#include <SDL_image.h>
 
 
 //standard C++ bib
@@ -36,12 +23,21 @@
 #include <ctime>
 #include <fstream>
 
-
-extern int tabNum[4][4];
-
-extern int FRAME_PER_SECOND;
+//variables globales
+extern int tabNum[12][12];
 
 extern bool GoOut;
+
+extern int gameOver;
+extern int gameWin;
+extern long int score;
+extern long int bestScore;
+extern bool boolChal;
+extern int GOAL;
+extern int hit;
+
+//Taille de la grille
+extern int nbCase;
 
 extern SDL_Surface* screen;
 extern SDL_Event event;

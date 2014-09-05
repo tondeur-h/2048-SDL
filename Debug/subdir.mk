@@ -5,18 +5,24 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
 ../AppGame.cpp \
+../appnew.cpp \
 ../globalVars.cpp \
-../main.cpp 
+../main.cpp \
+../sdl_widgets.cpp 
 
 OBJS += \
 ./AppGame.o \
+./appnew.o \
 ./globalVars.o \
-./main.o 
+./main.o \
+./sdl_widgets.o 
 
 CPP_DEPS += \
 ./AppGame.d \
+./appnew.d \
 ./globalVars.d \
-./main.d 
+./main.d \
+./sdl_widgets.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
