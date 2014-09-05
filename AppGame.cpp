@@ -139,6 +139,8 @@ drawTab();
 							if (direction==6) {GoOut=true;direction=0;}
 							if (direction==7) {
                                     if (!__LINUX__){system("start help.html");}
+                                    else {system("xdg-open 'help.html' 2>/dev/null &");}
+
                                     direction=0;
                             }
 							if (direction>=1 && direction<=4)

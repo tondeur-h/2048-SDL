@@ -23,6 +23,9 @@
 #include <ctime>
 #include <fstream>
 
+//standard C lib
+#include <stdlib.h>
+
 //variables globales
 extern int tabNum[12][12];
 
